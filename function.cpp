@@ -139,8 +139,9 @@ void speedSearch(){
     Students student;
     string name, lastName;
     bool info{false};
-    cout << "Введіть Ім'я: "; cin >> name;
-    cout << "Введіть Прізвище: "; cin >> lastName; cout << "\n";
+    cin.ignore();
+    cout << "Введіть Ім'я: "; getline(cin, name);
+    cout << "Введіть Прізвище: "; getline(cin, lastName); cout << "\n";
     while (file.read(reinterpret_cast<char*>(&student), sizeof(Students))) {
         if (student.firstName == name & student.lastName == lastName){
             studentPrint(student);
@@ -372,7 +373,7 @@ void forDelete(bool &found, string &name, string &lastName){
     if (found){
         remove(filename); 
         rename("$%&%$%&^.bin", filename);
-        cout << "Операцію виконано над '" << name << " " << lastName << "\n" ; 
+        cout << "Операцію виконано над '" << name << " " << lastName << "'\n" ; 
     } else {
         remove("$%&%$%&^.bin");
         cout << "Запис '" << name << " " << lastName << "' не знайдено." << endl;
