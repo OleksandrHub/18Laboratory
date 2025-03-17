@@ -256,6 +256,7 @@ void deleteBD(){
     Students student;
     string name, lastName;
     bool found = false;
+    cin.ignore();
     cout << "Введіть Ім'я: "; getline(cin, name);
     cout << "Введіть Прізвище: "; getline(cin, lastName); cout << "\n";
     while (inFile.read(reinterpret_cast<char*>(&student), sizeof(Students))) {
