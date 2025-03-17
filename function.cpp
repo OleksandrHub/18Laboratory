@@ -218,8 +218,8 @@ void editStudentBD(){
     Students student;
     string name, lastName;
     bool found = false;
-    cout << "Введіть Ім'я: "; cin >> name;
-    cout << "Введіть Прізвище: "; cin >> lastName; cout << "\n";
+    cout << "Введіть Ім'я: "; getline(cin, name);
+    cout << "Введіть Прізвище: "; getline(cin, lastName); cout << "\n";
     while (inFile.read(reinterpret_cast<char*>(&student), sizeof(Students))) {
         if (student.firstName == name & student.lastName == lastName){
             found = true;
@@ -255,8 +255,8 @@ void deleteBD(){
     Students student;
     string name, lastName;
     bool found = false;
-    cout << "Введіть Ім'я: "; cin >> name;
-    cout << "Введіть Прізвище: "; cin >> lastName; cout << "\n";
+    cout << "Введіть Ім'я: "; getline(cin, name);
+    cout << "Введіть Прізвище: "; getline(cin, lastName); cout << "\n";
     while (inFile.read(reinterpret_cast<char*>(&student), sizeof(Students))) {
         if (student.firstName == name & student.lastName == lastName){
             found = true;
@@ -286,7 +286,8 @@ void advancedSearch(){
     cin >> oper; cout << endl;
     cin.ignore();
     cout << "Введіть значення: " << endl; getline(cin, right); cout << endl;
-    
+    clear();
+
     while (file.read(reinterpret_cast<char*>(&student), sizeof(Students))) {
         bool match = false;
         switch (oper) {
