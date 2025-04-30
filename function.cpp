@@ -104,11 +104,20 @@ void addStudent(){
     Students student;
     cout << "Введіть Ім'я учня: "; cin.getline(student.firstName, 50);
     cout << "Введіть Прізвище учня: "; cin.getline(student.lastName, 50);
-    cout << "Введіть Дату народження (Формат ХХ.ХХ.ХХХХ): "; cin.getline(student.date, 30);
-    cout << "Введіть Стать Man/Woman учня: "; cin.getline(student.sex, 20);
-    cout << "Введіть Номер (Формат +380ХХХХХХХХ): ";  cin.getline(student.phoneNumber, 30);
-    cout << "Введіть Адресу учня: "; cin.getline(student.address, 200);
-    cout << "Введіть Рейтинг учня: "; cin.getline(student.reiting, 10);
+    do {
+        cout << "Введіть Дата народження (Формат ХХ.ХХ.ХХХХ): "; cin.getline(student.date, 30);
+        if (student.date[2] != '.' && student.date[5] != '.') cout << "Невірний формат дати! Спробуйте ще раз." << endl;
+    } while (student.date[2] != '.' && student.date[5] != '.');
+    cout << "Введіть Стать учня: "; cin.getline(student.sex, 20);
+    do{
+        cout << "Введіть Номер (Формат +380ХХХХХХХХ): "; cin.getline(student.phoneNumber, 30);
+        if (student.phoneNumber[0] != '+') cout << "Невірний формат номера! Спробуйте ще раз." << endl;
+    } while (student.phoneNumber[0] != '+');
+    cout << "Введіть Адресу учня (до 200 символів): "; cin.getline(student.address, 200);
+    do{
+        cout << "Введіть Рейтинг (1-100) учня: "; cin.getline(student.reiting, 10);
+        if (stod(student.reiting) < 1 || stod(student.reiting) > 100) cout << "Невірний формат рейтингу! Спробуйте ще раз." << endl;
+    } while (stod(student.reiting) < 1 || stod(student.reiting) > 100);
     ofstream file(base_data, ios::binary | ios::out | ios::app);
     file.write(reinterpret_cast<const char*>(&student), sizeof(Students));
     file.close();
@@ -233,11 +242,26 @@ void editStudentBD(){
             switch (choice) {
                 case 1: cout << "Нове ім'я: "; cin.getline(student.firstName, 50); break;
                 case 2: cout << "Нове прізвище: "; cin.getline(student.lastName, 50); break;
-                case 3: cout << "Нова дата народження: "; cin.getline(student.date, 30); break;
+                case 3: cout << "Нова дата народження: ";
+                    do {
+                        cout << "Введіть Дата народження (Формат ХХ.ХХ.ХХХХ): "; cin.getline(student.date, 30);
+                        if (student.date[2] != '.' && student.date[5] != '.') cout << "Невірний формат дати! Спробуйте ще раз." << endl;
+                    } while (student.date[2] != '.' && student.date[5] != '.'); 
+                    break;
                 case 4: cout << "Нова стать: "; cin.getline(student.sex, 10); break;
-                case 5: cout << "Новий телефон: "; cin.getline(student.phoneNumber, 30); break;
-                case 6: cout << "Нова адреса: "; cin.getline(student.address, 200); break;
-                case 7: cout << "Новий рейтинг: "; cin.getline(student.reiting, 10); break;
+                case 5: cout << "Новий телефон: ";
+                    do{
+                        cout << "Введіть Номер (Формат +380ХХХХХХХХ): "; cin.getline(student.phoneNumber, 30);
+                        if (student.phoneNumber[0] != '+') cout << "Невірний формат номера! Спробуйте ще раз." << endl;
+                    } while (student.phoneNumber[0] != '+'); 
+                    break;
+                case 6: cout << "Нова адреса (до 200 символів): "; cin.getline(student.address, 200); break;
+                case 7: cout << "Новий рейтинг: "; 
+                    do{
+                        cout << "Введіть Рейтинг (1-100) учня: "; cin.getline(student.reiting, 10);
+                        if (stod(student.reiting) < 1 || stod(student.reiting) > 100) cout << "Невірний формат рейтингу! Спробуйте ще раз." << endl;
+                    } while (stod(student.reiting) < 1 || stod(student.reiting) > 100);
+                    break;
                 default: cout << "Невірний вибір!\n"; returnUser();
             } 
         }
