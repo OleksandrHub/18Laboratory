@@ -87,7 +87,12 @@ void createBD(){
 // Зміна бази даних
 void replaceBD(){
     cout << "Введіть назву Бази Даних (Якщо не хочете підклютатися натисніть Enter)" << endl;
-    cin.ignore(); getline(cin, base_data); base_data += ".bin";
+    cin.ignore();
+    do {
+        getline(cin, base_data);
+        if (base_data.find(" ") != string::npos) cout << "Введіть назву без пробілів!" << endl;
+    } while (base_data.find(" ") != string::npos);
+    base_data += ".bin";
     clear();
     if (base_data != ".bin"){
         cout << "Базу Даних змінено! На " << base_data << endl;
@@ -106,6 +111,7 @@ void addStudent(){
     cout << "Введіть Прізвище учня: "; cin.getline(student.lastName, 50);
     do {
         cout << "Введіть Дата народження (Формат ХХ.ХХ.ХХХХ): "; cin.getline(student.date, 30);
+        cout << student.date[2] << " " << student.date[5] << endl;
         if (student.date[2] != '.' && student.date[5] != '.') cout << "Невірний формат дати! Спробуйте ще раз." << endl;
     } while (student.date[2] != '.' && student.date[5] != '.');
     cout << "Введіть Стать учня: "; cin.getline(student.sex, 20);
