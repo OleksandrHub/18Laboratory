@@ -44,3 +44,9 @@ void studentPrint(const Students &student);
 void error_openBD(ifstream &file);
 void Enter();
 void forDelete(bool &found, string &name, string &lastName);
+
+void error_space_line(string &name);
+string error_input(int n);
+string error_input_date(int n);
+string error_input_phone(int n);
+string error_input_address(int n);

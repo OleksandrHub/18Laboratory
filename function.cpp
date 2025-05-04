@@ -88,10 +88,7 @@ void createBD(){
 void replaceBD(){
     cout << "Введіть назву Бази Даних (Якщо не хочете підклютатися натисніть Enter)" << endl;
     cin.ignore();
-    do {
-        getline(cin, base_data);
-        if (base_data.find(" ") != string::npos) cout << "Введіть назву без пробілів!" << endl;
-    } while (base_data.find(" ") != string::npos);
+    error_space_line(base_data);
     base_data += ".bin";
     clear();
     if (base_data != ".bin"){
@@ -107,29 +104,33 @@ void addStudent(){
     error_openBD(checkFile);
     checkFile.close();
     Students student;
-    cout << "Введіть Ім'я учня: "; cin.getline(student.firstName, 50);
-    cout << "Введіть Прізвище учня: "; cin.getline(student.lastName, 50);
-    do {
-        cout << "Введіть Дата народження (Формат ХХ.ХХ.ХХХХ): "; cin.getline(student.date, 30);
-        cout << student.date[2] << " " << student.date[5] << endl;
-        if (student.date[2] != '.' && student.date[5] != '.') cout << "Невірний формат дати! Спробуйте ще раз." << endl;
-    } while (student.date[2] != '.' && student.date[5] != '.');
-    cout << "Введіть Стать учня: "; cin.getline(student.sex, 20);
+    cout << "Введіть Ім'я учня: "; strcpy(student.firstName, error_input(50).c_str());
+    cout << "Введіть Прізвище учня: "; strcpy(student.lastName, error_input(50).c_str());
+    cout << "Введіть Дата народження (Формат ХХ.ХХ.ХХХХ): "; strcpy(student.date, error_input_date(30).c_str());
+    cout << "Введіть Стать учня: "; strcpy(student.sex, error_input(20).c_str());
+    cout << "Введіть Номер телефону (Формат +380ХХХХХХХХ): "; strcpy(student.phoneNumber, error_input_phone(30).c_str());
+    cout << "Введіть Адресу учня (до 200 символів): "; strcpy(student.address, error_input_address(200).c_str());
     do{
-        cout << "Введіть Номер (Формат +380ХХХХХХХХ): "; cin.getline(student.phoneNumber, 30);
-        if (student.phoneNumber[0] != '+') cout << "Невірний формат номера! Спробуйте ще раз." << endl;
-    } while (student.phoneNumber[0] != '+');
-    cout << "Введіть Адресу учня (до 200 символів): "; cin.getline(student.address, 200);
-    do{
-        cout << "Введіть Рейтинг (1-100) учня: "; cin.getline(student.reiting, 10);
-        if (stod(student.reiting) < 1 || stod(student.reiting) > 100) cout << "Невірний формат рейтингу! Спробуйте ще раз." << endl;
-    } while (stod(student.reiting) < 1 || stod(student.reiting) > 100);
+        cout << "Введіть Рейтинг (0 - 100) учня: "; cin.getline(student.reiting, 10);
+        if (stod(student.reiting) < 0 || stod(student.reiting) > 100) cout << "Невірний формат рейтингу! Спробуйте ще раз." << endl;
+    } while (stod(student.reiting) < 0 || stod(student.reiting) > 100);
     ofstream file(base_data, ios::binary | ios::out | ios::app);
     file.write(reinterpret_cast<const char*>(&student), sizeof(Students));
     file.close();
     clear();
-    cout << "Дані успішно записано у Базу даних!" << std::endl;
-    returnUser();
+    cout << "Дані учня успішно додано до Бази Даних!" << endl;
+    cout << "Ви ввели дані учня:\n";
+    studentPrint(student);
+    cout << "----------------------" << "\n";
+    cout << "Бажаєте додати ще одного учня? (y/n): ";
+    char choice;
+    cin >> choice;
+    if (choice == 'y' || choice == 'Y') {
+        addStudent();
+    } else {
+        Enter();
+    }
+    
 }
 
 //Функція: Читання з списку
@@ -155,8 +156,8 @@ void speedSearch(){
     string name, lastName;
     bool info{false};
     cin.ignore();
-    cout << "Введіть Ім'я: "; getline(cin, name);
-    cout << "Введіть Прізвище: "; getline(cin, lastName); cout << "\n";
+    cout << "Введіть Ім'я: "; error_space_line(name);
+    cout << "Введіть Прізвище: "; error_space_line(lastName); cout << "\n";
     while (file.read(reinterpret_cast<char*>(&student), sizeof(Students))) {
         if (student.firstName == name & student.lastName == lastName){
             studentPrint(student);
@@ -209,7 +210,8 @@ void sortStudents() {
                  });
             break;
         default:
-            cout << "Невірний вибір!\n";
+            clear();
+            cout << "Невірний вибір!" << endl;
             returnUser();
     }
 
@@ -241,34 +243,24 @@ void editStudentBD(){
             found = true;
             cout << "\nЗнайдено учня:\n";
             studentPrint(student);
-            cout << "\nВиберіть номер поля для редагування (1-7): ";
+            cout << "0 - Вихід з редагування!" << endl;
+            cout << "\nВиберіть номер поля для редагування (0-7): ";
             int choice;
             cin >> choice;
             cin.ignore();
             switch (choice) {
-                case 1: cout << "Нове ім'я: "; cin.getline(student.firstName, 50); break;
-                case 2: cout << "Нове прізвище: "; cin.getline(student.lastName, 50); break;
-                case 3: cout << "Нова дата народження: ";
-                    do {
-                        cout << "Введіть Дата народження (Формат ХХ.ХХ.ХХХХ): "; cin.getline(student.date, 30);
-                        if (student.date[2] != '.' && student.date[5] != '.') cout << "Невірний формат дати! Спробуйте ще раз." << endl;
-                    } while (student.date[2] != '.' && student.date[5] != '.'); 
-                    break;
-                case 4: cout << "Нова стать: "; cin.getline(student.sex, 10); break;
-                case 5: cout << "Новий телефон: ";
-                    do{
-                        cout << "Введіть Номер (Формат +380ХХХХХХХХ): "; cin.getline(student.phoneNumber, 30);
-                        if (student.phoneNumber[0] != '+') cout << "Невірний формат номера! Спробуйте ще раз." << endl;
-                    } while (student.phoneNumber[0] != '+'); 
-                    break;
-                case 6: cout << "Нова адреса (до 200 символів): "; cin.getline(student.address, 200); break;
-                case 7: cout << "Новий рейтинг: "; 
-                    do{
-                        cout << "Введіть Рейтинг (1-100) учня: "; cin.getline(student.reiting, 10);
-                        if (stod(student.reiting) < 1 || stod(student.reiting) > 100) cout << "Невірний формат рейтингу! Спробуйте ще раз." << endl;
-                    } while (stod(student.reiting) < 1 || stod(student.reiting) > 100);
-                    break;
-                default: cout << "Невірний вибір!\n"; returnUser();
+                case 1: cout << "Введіть нове Ім'я: "; strcpy(student.firstName, error_input(50).c_str()) ; break;
+                case 2: cout << "Введіть нове Прізвище: "; strcpy(student.lastName, error_input(50).c_str()); break;
+                case 3: cout << "Введіть нову Дату народження (Формат ХХ.ХХ.ХХХХ): "; strcpy(student.date, error_input_date(30).c_str()); break;
+                case 4: cout << "Введіть нову Стать: "; strcpy(student.sex, error_input(20).c_str()); break;
+                case 5: cout << "Введіть новий Номер телефону (Формат +380ХХХХХХХХ): "; strcpy(student.phoneNumber, error_input_phone(30).c_str()); break;
+                case 6: cout << "Введіть нову Адресу (до 200 символів): "; strcpy(student.address, error_input_address(200).c_str()); break;
+                case 7: do{
+                    cout << "Введіть новий Рейтинг (0 - 100): "; cin.getline(student.reiting, 10);
+                    if (stod(student.reiting) < 0 || stod(student.reiting) > 100) cout << "Невірний формат рейтингу! Спробуйте ще раз." << endl;
+                } while (stod(student.reiting) < 0 || stod(student.reiting) > 100); break;
+                case 0: cout << "Вихід з редагування!" << endl; clear(); returnUser(); break;
+                default: cout << "Невірний вибір!\n"; clear(); returnUser();
             } 
         }
         tempFile.write(reinterpret_cast<const char*>(&student), sizeof(Students));
@@ -287,8 +279,8 @@ void deleteBD(){
     string name, lastName;
     bool found = false;
     cin.ignore();
-    cout << "Введіть Ім'я: "; getline(cin, name);
-    cout << "Введіть Прізвище: "; getline(cin, lastName); cout << "\n";
+    cout << "Введіть Ім'я: "; error_space_line(name);
+    cout << "Введіть Прізвище: "; error_space_line(lastName); cout << "\n";
     while (inFile.read(reinterpret_cast<char*>(&student), sizeof(Students))) {
         if (student.firstName == name & student.lastName == lastName){
             found = true;
@@ -327,7 +319,7 @@ void advancedSearch(){
             case 2: match = (strcmp(student.lastName, right.c_str()) == 0); break;
             case 3: match = (strcmp(student.phoneNumber, right.c_str()) == 0); break;
             case 4: match = (strcmp(student.sex, right.c_str()) == 0); break;
-            default: clear(); cout << "Невірний параметр!"; returnUser();
+            default: clear(); cout << "Невірний параметр!" << endl; returnUser();
         }
         if (match){
             studentPrint(student);
@@ -429,7 +421,9 @@ void error_openBD(ifstream &file) {
         returnUser();
     }
 }
+#pragma endregion
 
+#pragma region Помилки
 // Функція: Якщо введене не вірне значення
 void error_value(){
     clear();
@@ -442,4 +436,68 @@ void print_exit(){
     cout << "Роботу завершено!" << endl;
     exit(0);
 }
+
+// Функція: Виводу про помилку (пропуску в назвах)
+void error_space_line(string &name){
+    do {
+        getline(cin, name);
+        if (name.find(" ") != string::npos) cout << "Введіть без пробілів!" << endl;
+    } while (name.find(" ") != string::npos);
+}
+
+// Функція: Виводу про помилки під час вводу
+string error_input(int n){
+    string name;
+    bool isValid;
+    do {
+        getline(cin, name);
+        isValid = name.find(" ") != string::npos || name.length() < 1 || name.length() > n - 1;
+        if (isValid) cout << "Введіть без пробілів та менше " << n << " символів!" << endl;;
+    } while (isValid);
+    
+    return name;
+}
+
+string error_input_date(int n){
+    string name;
+    bool isValid;
+    do {
+        getline(cin, name);
+        isValid = name.find(" ") != string::npos || name.length() < 1 || name.length() > n - 1 || name[2] != '.' || name[5] != '.';
+        for (int i = 0; i < name.length(); i++){
+            if (isdigit(name[i]) == false && name[i] != '.') isValid = true;
+        }
+        if (isValid) cout << "Невірний формат дати! Спробуйте ще раз " << endl;;
+    } while (isValid);
+    
+    return name;
+}
+
+string error_input_phone(int n){
+    string name;
+    bool isValid;
+    do {
+        getline(cin, name);
+        isValid = name.find(" ") != string::npos || name.length() < 1 || name.length() > n - 1 || name[0] != '+';
+        for (int i = 0; i < name.length(); i++){
+            if (isdigit(name[i]) == false && name[i] != '+') isValid = true;
+        }
+        if (isValid) cout << "Невірний формат номера! Спробуйте ще раз " << endl;;
+    } while (isValid);
+    
+    return name;
+}
+
+string error_input_address(int n){
+    string name;
+    bool isValid;
+    do {
+        getline(cin, name);
+        isValid =  name.length() < 1 || name.length() > n - 1;
+        if (isValid) cout << "Введіть без пробілів та менше " << n << " символів!" << endl;;
+    } while (isValid);
+    
+    return name;
+}
+
 #pragma endregion
