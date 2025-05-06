@@ -99,38 +99,35 @@ void replaceBD(){
 
 //Функція: Додати учня
 void addStudent(){
-    clear();cin.ignore();
-    ifstream checkFile(base_data, ios::binary);
-    error_openBD(checkFile);
-    checkFile.close();
-    Students student;
-    cout << "Введіть Ім'я учня: "; strcpy(student.firstName, error_input(50).c_str());
-    cout << "Введіть Прізвище учня: "; strcpy(student.lastName, error_input(50).c_str());
-    cout << "Введіть Дата народження (Формат ХХ.ХХ.ХХХХ): "; strcpy(student.date, error_input_date(30).c_str());
-    cout << "Введіть Стать учня: "; strcpy(student.sex, error_input(20).c_str());
-    cout << "Введіть Номер телефону (Формат +380ХХХХХХХХ): "; strcpy(student.phoneNumber, error_input_phone(30).c_str());
-    cout << "Введіть Адресу учня (до 200 символів): "; strcpy(student.address, error_input_address(200).c_str());
-    do{
-        cout << "Введіть Рейтинг (0 - 100) учня: "; cin.getline(student.reiting, 10);
-        if (stod(student.reiting) < 0 || stod(student.reiting) > 100) cout << "Невірний формат рейтингу! Спробуйте ще раз." << endl;
-    } while (stod(student.reiting) < 0 || stod(student.reiting) > 100);
-    ofstream file(base_data, ios::binary | ios::out | ios::app);
-    file.write(reinterpret_cast<const char*>(&student), sizeof(Students));
-    file.close();
-    clear();
-    cout << "Дані учня успішно додано до Бази Даних!" << endl;
-    cout << "Ви ввели дані учня:\n";
-    studentPrint(student);
-    cout << "----------------------" << "\n";
-    cout << "Бажаєте додати ще одного учня? (y/n): ";
     char choice;
-    cin >> choice;
-    if (choice == 'y' || choice == 'Y') {
-        addStudent();
-    } else {
-        Enter();
-    }
-    
+    do {
+        clear();cin.ignore();
+        ifstream checkFile(base_data, ios::binary);
+        error_openBD(checkFile);
+        checkFile.close();
+        Students student;
+        cout << "Введіть Ім'я учня: "; strcpy(student.firstName, error_input(50).c_str());
+        cout << "Введіть Прізвище учня: "; strcpy(student.lastName, error_input(50).c_str());
+        cout << "Введіть Дата народження (Формат ХХ.ХХ.ХХХХ): "; strcpy(student.date, error_input_date(30).c_str());
+        cout << "Введіть Стать учня: "; strcpy(student.sex, error_input(20).c_str());
+        cout << "Введіть Номер телефону (Формат +380ХХХХХХХХ): "; strcpy(student.phoneNumber, error_input_phone(30).c_str());
+        cout << "Введіть Адресу учня (до 200 символів): "; strcpy(student.address, error_input_address(200).c_str());
+        do{
+            cout << "Введіть Рейтинг (0 - 100) учня: "; cin.getline(student.reiting, 10);
+            if (stod(student.reiting) < 0 || stod(student.reiting) > 100) cout << "Невірний формат рейтингу! Спробуйте ще раз." << endl;
+        } while (stod(student.reiting) < 0 || stod(student.reiting) > 100);
+        ofstream file(base_data, ios::binary | ios::out | ios::app);
+        file.write(reinterpret_cast<const char*>(&student), sizeof(Students));
+        file.close();
+        clear();
+        cout << "Дані учня успішно додано до Бази Даних!" << endl;
+        cout << "Ви ввели дані учня:\n";
+        studentPrint(student);
+        cout << "----------------------" << "\n";
+        cout << "Бажаєте додати ще одного учня? (y/n): ";
+        cin >> choice;
+    } while (choice == 'y' || choice == 'Y');
+    Enter();
 }
 
 //Функція: Читання з списку
