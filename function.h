@@ -50,3 +50,4 @@ string error_input(int n);
 string error_input_date(int n);
 string error_input_phone(int n);
 string error_input_address(int n);
+string error_input_reiting(int n);

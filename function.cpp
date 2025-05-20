@@ -10,9 +10,10 @@ void menu(){
     << "1 - Гість" << endl 
     << "2 - Адміністратор" << endl;
     cin >> user;
+    clear();
     switch(user){
-        case 1: clear(); replaceBD(); break;
-        case 2: clear(); password(); break;
+        case 1: replaceBD(); break;
+        case 2: password(); break;
         default: error_value();
     }
 }
@@ -28,14 +29,15 @@ void guest(){
     << "6 - Зміна бази даних" << endl
     << "0 - Вихід" << endl;
     cin >> oper;
+    clear();
     switch (oper){
-        case 1: clear(); speedSearch();break;
-        case 2: clear(); advancedSearch();break;
-        case 3: clear(); sortStudents();break;
-        case 4: clear(); listStudents();break;
-        case 5: clear(); sumRainting();break;
-        case 6: clear(); replaceBD(); break;
-        case 0: clear(); print_exit();break;
+        case 1: speedSearch();break;
+        case 2: advancedSearch();break;
+        case 3: sortStudents();break;
+        case 4: listStudents();break;
+        case 5: sumRainting();break;
+        case 6: replaceBD(); break;
+        case 0: print_exit();break;
         default: error_value();
     }
 }
@@ -55,17 +57,18 @@ void admin(){
     << "10 - Зміна бази даних" << endl
     << "0 - Вихід" << endl;
     cin >> oper;
+    clear();
     switch (oper){
-        case 1: clear(); createBD();break;
-        case 2: clear(); addStudent();break;
-        case 3: clear(); listStudents();break;
-        case 4: clear(); speedSearch();break;
-        case 5: clear(); sortStudents();break;
-        case 6: clear(); editStudentBD();break;
-        case 7: clear(); deleteBD();break;
-        case 8: clear(); advancedSearch();break;
-        case 9: clear(); sumRainting();break;
-        case 10: clear(); replaceBD();break;
+        case 1: createBD();break;
+        case 2: addStudent();break;
+        case 3: listStudents();break;
+        case 4: speedSearch();break;
+        case 5: sortStudents();break;
+        case 6: editStudentBD();break;
+        case 7: deleteBD();break;
+        case 8: advancedSearch();break;
+        case 9: sumRainting();break;
+        case 10: replaceBD();break;
         case 0: print_exit();break;
         default: error_value();
     }
@@ -112,10 +115,7 @@ void addStudent(){
         cout << "Введіть Стать учня: "; strcpy(student.sex, error_input(20).c_str());
         cout << "Введіть Номер телефону (Формат +380ХХХХХХХХ): "; strcpy(student.phoneNumber, error_input_phone(30).c_str());
         cout << "Введіть Адресу учня (до 200 символів): "; strcpy(student.address, error_input_address(200).c_str());
-        do{
-            cout << "Введіть Рейтинг (0 - 100) учня: "; cin.getline(student.reiting, 10);
-            if (stod(student.reiting) < 0 || stod(student.reiting) > 100) cout << "Невірний формат рейтингу! Спробуйте ще раз." << endl;
-        } while (stod(student.reiting) < 0 || stod(student.reiting) > 100);
+        cout << "Введіть Рейтинг (0 - 100) учня: "; strcpy(student.reiting, error_input_reiting(10).c_str());
         ofstream file(base_data, ios::binary | ios::out | ios::app);
         file.write(reinterpret_cast<const char*>(&student), sizeof(Students));
         file.close();
@@ -139,8 +139,8 @@ void listStudents(){
         studentPrint(student);
         cout << "----------------------" << "\n";
     }
-    if (file.eof()) cout << "\nЧитання завершено, всі дані були зчитані." << std::endl;
-    else cout << "\nПомилка під час читання Бази даних!" << std::endl;
+    if (file.eof()) cout << "\nЧитання завершено, всі дані були зчитані." << endl;
+    else cout << "\nПомилка під час читання Бази даних!" << endl;
     file.close();
     Enter();
 }
@@ -173,17 +173,14 @@ void sortStudents() {
     error_openBD(inputFile);
     vector<Students> studentsList;
     Students student;
-
     while (inputFile.read(reinterpret_cast<char*>(&student), sizeof(Students))) {
         studentsList.push_back(student);
     }
-
     inputFile.close();
     if (studentsList.empty()) {
         cout << "База даних порожня! Немає що сортувати." << endl;
         returnUser();
     }
-
     cout << "Виберіть критерій сортування:\n" << "1 - Ім'я\n" << "2 - Прізвище\n" << "3 - Рейтинг\n";
     int choice; cin >> choice;
 
@@ -211,13 +208,11 @@ void sortStudents() {
             cout << "Невірний вибір!" << endl;
             returnUser();
     }
-
     ofstream outputFile(base_data, ios::binary | ios::trunc);
     for (const auto &s : studentsList) {
         outputFile.write(reinterpret_cast<const char*>(&s), sizeof(Students));
     }
     outputFile.close();
-
     clear();
     cout << "Сортування завершено!\n";
     returnUser();
@@ -252,10 +247,7 @@ void editStudentBD(){
                 case 4: cout << "Введіть нову Стать: "; strcpy(student.sex, error_input(20).c_str()); break;
                 case 5: cout << "Введіть новий Номер телефону (Формат +380ХХХХХХХХ): "; strcpy(student.phoneNumber, error_input_phone(30).c_str()); break;
                 case 6: cout << "Введіть нову Адресу (до 200 символів): "; strcpy(student.address, error_input_address(200).c_str()); break;
-                case 7: do{
-                    cout << "Введіть новий Рейтинг (0 - 100): "; cin.getline(student.reiting, 10);
-                    if (stod(student.reiting) < 0 || stod(student.reiting) > 100) cout << "Невірний формат рейтингу! Спробуйте ще раз." << endl;
-                } while (stod(student.reiting) < 0 || stod(student.reiting) > 100); break;
+                case 7: cout << "Введіть новий Рейтинг (0 - 100): "; strcpy(student.reiting, error_input_reiting(10).c_str()); break;
                 case 0: cout << "Вихід з редагування!" << endl; clear(); returnUser(); break;
                 default: cout << "Невірний вибір!\n"; clear(); returnUser();
             } 
@@ -356,15 +348,25 @@ void clear(){
 
 // Функція: Пароль
 void password(){
-    int code;
+    string code;
     cout << "Вітаю у Базі даних учні класу" << endl
     << "Ви ввійшли як адміністратор" << endl
     << "Введіть пароль: " << endl;
     cin >> code;
     clear();
-    if (code == 322){
-        replaceBD();
-    } else error_value();
+    do{
+        if (strcmp(code.c_str(), "322") == 0){
+            cout << "Пароль вірний!" << endl;
+            replaceBD();
+        } else {
+            cout << "Пароль не вірний!" << endl;
+            cout << "Введіть пароль: " << endl;
+            cin >> code;
+        }
+    } while (strcmp(code.c_str(), "322") != 0);
+    clear();
+    cout << "Пароль вірний!" << endl;
+    replaceBD();
 }
 
 // Функція: Виводу даних учня
@@ -410,14 +412,6 @@ void returnUser(){
     } else guest();
 }
 
-// Функція: перевірка чи існує БД
-void error_openBD(ifstream &file) {
-    if (!file) {
-        clear();
-        cout << "Помилка відкриття Бази даних!" << endl;
-        returnUser();
-    }
-}
 #pragma endregion
 
 #pragma region Помилки
@@ -460,7 +454,7 @@ string error_input_date(int n){
     bool isValid;
     do {
         getline(cin, name);
-        isValid = name.find(" ") != string::npos || name.length() < 1 || name.length() > n - 1 || name[2] != '.' || name[5] != '.';
+        isValid = name.find(" ") != string::npos || name.length() < 10 || name.length() > n - 1 || name[2] != '.' || name[5] != '.';
         for (int i = 0; i < name.length(); i++){
             if (isdigit(name[i]) == false && name[i] != '.') isValid = true;
         }
@@ -497,4 +491,37 @@ string error_input_address(int n){
     return name;
 }
 
+// Функція: Перевірка рейтингу
+string error_input_reiting(int n) {
+    string name;
+    int count = 0;
+    bool isValid;
+    do {
+        getline(cin, name);
+        isValid = name.find(" ") != string::npos || name.length() < 1 || name.length() > n - 1;
+
+        count = 0; 
+        for (int i = 0; i < name.length(); i++) {
+            if (!isdigit(name[i]) && name[i] != '.') isValid = true; 
+            if (name[i] == '.') count++;
+        }
+
+        if (name[0] == '.') isValid = true;
+        if (count > 1) isValid = true;  
+        if (!isValid && (stod(name) < 0 || stod(name) > 100)) isValid = true; 
+
+        if (isValid) cout << "Невірний формат рейтингу! Спробуйте ще раз " << endl;
+    } while (isValid);
+
+    return name;
+}
+
+// Функція: перевірка чи існує БД
+void error_openBD(ifstream &file) {
+    if (!file) {
+        clear();
+        cout << "Помилка відкриття Бази даних!" << endl;
+        returnUser();
+    }
+}
 #pragma endregion

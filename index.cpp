@@ -3,10 +3,10 @@
 #include "function.h"
 using namespace std;
 
-
+// Виводить початковий екран із інформацією про лабораторну роботу, чекає натискання Enter і викликає функцію меню.
 int main(){
 	string input;
-    system("chcp 1251 > nul");
+	setlocale(LC_ALL, "uk_UA.UTF-8");
 	clear();
 	cout << " \t \t \t МІНІСТЕРСТВО ОСВІТИ І НАУКИ " << endl;
 	cout << " \t \t ТЕРНОПІЛЬСЬКИЙ НАЦІОНАЛЬНИЙ ТЕХНІЧНИЙ " << endl;
