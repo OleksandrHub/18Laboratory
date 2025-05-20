@@ -18,7 +18,7 @@ int main(){
 	cout << "\t \t \t \t \t \t \t  Підготував студент " << endl;
 	cout << "\t \t \t \t \t \t \t  групи СН-11" << endl;
 	cout << "\t \t \t \t \t \t \t  Кліщ О. В." << endl;
-	cout << "\t \t \t \t \t \t \t  Версія: 1.2025.05.04" << endl;
+	cout << "\t \t \t \t \t \t \t  Версія: 1.2025.05.20" << endl;
 	cout << "Натисніть Enter, щоб продовжити ";
 	getline(cin, input);
 	menu();
